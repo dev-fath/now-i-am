@@ -15,7 +15,7 @@ import {
 } from '@ionic/react';
 import { personCircle } from 'ionicons/icons';
 import { useParams } from 'react-router';
-import './ViewMessage.css';
+import './ViewMessage.scss';
 
 function ViewMessage() {
   const [message, setMessage] = useState<Message>();
