@@ -2,6 +2,26 @@
   "name": "now-i-am",
   "version": "0.0.1",
   "private": true,
+  "author": {
+    "name": "dev-fath",
+    "email": "ggje33@gmail.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "rimraf": "rimraf",
+    "start": "react-scripts start",
+    "start:ios": "ionic capacitor run ios --external -l",
+    "start:android": "ionic capacitor run android --external -l",
+    "start:lab": "ionic serve --lab",
+    "sync": "ionic capacitor sync",
+    "sync:ios": "ionic capacitor sync ios",
+    "sync:android": "ionic capacitor sync android",
+    "open:ios": "ionic capacitor open ios",
+    "open:android": "ionic capacitor open android",
+    "build": "react-scripts build --prod",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@capacitor/android": "^4.6.2",
     "@capacitor/app": "4.1.1",
@@ -44,12 +64,6 @@
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
     "workbox-streams": "^5.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
-    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [
@@ -99,6 +113,9 @@
       "json",
       "node"
     ]
+  },
+  "engines": {
+    "node": "18.4.0"
   },
   "description": "Now-I-Am"
 }
