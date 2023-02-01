@@ -1,8 +1,13 @@
 export interface MessageInterface {
   fromName: string;
   subject: string;
+
   date: string;
   id: number;
+  title?: string;
+  contents?: string;
+  imageUrl?: string;
+  category?: string;
 }
 
 const messages: MessageInterface[] = [
@@ -11,6 +16,7 @@ const messages: MessageInterface[] = [
     subject: 'New event: Trip to Vegas',
     date: '9:32 AM',
     id: 0,
+    imageUrl: 'https://cdn.crowdpic.net/list-thumb/thumb_l_F463EFAEB7D7D7FACD9A21B3B1516AA5.jpg',
   },
   {
     fromName: 'Lauren Ruthford',
@@ -29,6 +35,7 @@ const messages: MessageInterface[] = [
     subject: 'The situation',
     date: 'Yesterday',
     id: 3,
+    imageUrl: 'https://cdn.crowdpic.net/list-thumb/thumb_l_4291713E6EC8D22461618B2107D30880.jpg',
   },
   {
     fromName: 'Joanne Pollan',
