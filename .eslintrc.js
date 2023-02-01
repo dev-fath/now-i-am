@@ -1,38 +1,113 @@
 module.exports = {
   root: true,
   env: {
-    es6: true,
+    es2021: true,
+    browser: true,
     node: true,
     jest: true,
   },
   extends: [
     'eslint:recommended',
+    'react-app',
+    'react-app/jest',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json', './tsconfig.eslint.json'],
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 2018,
     sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.eslint.json'],
     createDefaultProgram: true,
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier', 'import', 'functional'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
-    indent: [
+    // General
+    'no-console': ['error', { allow: ['debug', 'warn', 'error'] }],
+    // TypeScript
+    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-member-accessibility': 'off',
+    '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/member-delimiter-style': 'off',
+    '@typescript-eslint/no-confusing-void-expression': [
       'error',
-      2,
-      { SwitchCase: 1, ignoredNodes: ['ConditionalExpression'] },
+      {
+        ignoreArrowShorthand: true,
+        ignoreVoidOperator: true,
+      },
     ],
+    'no-duplicate-imports': 'off',
+    '@typescript-eslint/no-duplicate-imports': 'error',
+    '@typescript-eslint/no-implicit-any-catch': 'error',
+    'no-invalid-this': 'off',
+    '@typescript-eslint/no-invalid-this': 'error',
+    '@typescript-eslint/no-invalid-void-type': 'error',
+    'no-loop-func': 'off',
+    '@typescript-eslint/no-loop-func': 'error',
+    'no-loss-of-precision': 'off',
+    '@typescript-eslint/no-loss-of-precision': 'error',
+    '@typescript-eslint/no-parameter-properties': 'off',
+    'no-redeclare': 'off',
+    '@typescript-eslint/no-redeclare': 'error',
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'error',
+    'no-throw-literal': 'off',
+    '@typescript-eslint/no-throw-literal': 'error',
+    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
+    // '@typescript-eslint/no-unnecessary-condition': 'error',
+    '@typescript-eslint/no-unnecessary-type-arguments': 'error',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'error',
+    '@typescript-eslint/no-unused-vars': 'error',
+    // React
+    'react/jsx-boolean-value': 'warn',
+    'react/jsx-curly-brace-presence': 'warn',
+    'react/jsx-fragments': 'warn',
+    'react/jsx-no-useless-fragment': 'warn',
+    'react/jsx-uses-react': 'off',
+    'react/prefer-stateless-function': 'warn',
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/function-component-definition': [
+      'error',
+      {
+        namedComponents: ['arrow-function', 'function-declaration'],
+        unnamedComponents: 'arrow-function',
+      },
+    ],
+    // Functional
+    // 'import/order': [
+    //   'error',
+    //   {
+    //     groups: ['builtin', 'external', 'internal'],
+    //     pathGroups: [
+    //       {
+    //         pattern: '{react,react-dom/**}',
+    //         group: 'external',
+    //         position: 'before',
+    //       },
+    //     ],
+    //     pathGroupsExcludedImportTypes: ['react'],
+    //     'newlines-between': 'always',
+    //     alphabetize: {
+    //       order: 'asc',
+    //       caseInsensitive: true,
+    //     },
+    //   },
+    // ],
+    eqeqeq: ['error', 'always', { null: 'ignore' }],
+    indent: ['error', 2, { SwitchCase: 1, ignoredNodes: ['ConditionalExpression'] }],
     'linebreak-style': ['error', 'unix'],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
@@ -41,13 +116,12 @@ module.exports = {
     'no-multiple-empty-lines': ['error', { max: 1 }],
     'no-empty-function': 'off',
     '@typescript-eslint/no-empty-function': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
+    // '@typescript-eslint/no-explicit-any': 'off',
     'react/display-name': 'off',
-    'react/prop-types': 'off',
     'max-len': [
       'error',
       {
-        code: 80,
+        code: 100,
         ignoreRegExpLiterals: true,
         ignoreComments: true,
         ignoreTrailingComments: true,
@@ -72,8 +146,24 @@ module.exports = {
         selector: 'interface',
         format: ['PascalCase'],
         custom: {
-          regex: '^I[A-Z]',
+          regex: '[a-zA-Z]Interface',
           match: true,
+        },
+      },
+      {
+        selector: 'typeLike',
+        format: ['PascalCase'],
+        custom: {
+          regex: '[a-zA-Z]Type$',
+          match: true,
+        },
+      },
+      {
+        selector: 'variable',
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+        custom: {
+          regex: '[a-zA-Z]Type$',
+          match: false,
         },
       },
       {
@@ -86,10 +176,5 @@ module.exports = {
         format: ['PascalCase'],
       },
     ],
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
   },
 };

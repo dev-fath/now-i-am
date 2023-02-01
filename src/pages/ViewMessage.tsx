@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Message, getMessage } from '../data/messages';
+import type { MessageInterface } from 'data/messages';
+import { getMessage } from 'data/messages';
 import {
   IonBackButton,
   IonButtons,
@@ -18,7 +19,7 @@ import { useParams } from 'react-router';
 import './ViewMessage.scss';
 
 function ViewMessage() {
-  const [message, setMessage] = useState<Message>();
+  const [message, setMessage] = useState<MessageInterface>();
   const params = useParams<{ id: string }>();
 
   useIonViewWillEnter(() => {
@@ -57,13 +58,12 @@ function ViewMessage() {
             <div className="ion-padding">
               <h1>{message.subject}</h1>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                deserunt mollit anim id est laborum.
               </p>
             </div>
           </>
