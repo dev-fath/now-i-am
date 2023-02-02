@@ -14,6 +14,7 @@ import {
   useIonViewWillEnter,
 } from '@ionic/react';
 import './Home.scss';
+import SnackBarMenu from 'components/snack-bar/SnackBarMenu';
 
 const Home: React.FC = () => {
   const [messages, setMessages] = useState<MessageInterface[]>([]);
@@ -33,20 +34,19 @@ const Home: React.FC = () => {
     <IonPage id="home-page">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Inbox</IonTitle>
+          <IonTitle>Feed</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={refresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Inbox</IonTitle>
           </IonToolbar>
         </IonHeader>
-
+        <SnackBarMenu />
         <IonList>
           {messages.map((m) => (
             <MessageListItem key={m.id} message={m} />
