@@ -32,7 +32,7 @@ const Home: React.FC = () => {
 
   return (
     <IonPage id="home-page">
-      <IonHeader>
+      <IonHeader translucent>
         <IonToolbar>
           <IonTitle>Feed</IonTitle>
         </IonToolbar>
@@ -43,7 +43,7 @@ const Home: React.FC = () => {
         </IonRefresher>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Inbox</IonTitle>
+            <IonTitle size="large">Feed</IonTitle>
           </IonToolbar>
         </IonHeader>
         <SnackBarMenu />
