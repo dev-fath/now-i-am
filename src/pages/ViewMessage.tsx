@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { MessageInterface } from 'data/messages';
+import type { FeedInterface } from 'data/messages';
 import { getMessage } from 'data/messages';
 import {
   IonBackButton,
@@ -19,11 +19,11 @@ import { useParams } from 'react-router';
 import './ViewMessage.scss';
 
 function ViewMessage() {
-  const [message, setMessage] = useState<MessageInterface>();
+  const [message, setMessage] = useState<FeedInterface>();
   const params = useParams<{ id: string }>();
 
   useIonViewWillEnter(() => {
-    const msg = getMessage(parseInt(params.id, 10));
+    const msg = getMessage(params.id);
     setMessage(msg);
   });
 
@@ -44,7 +44,7 @@ function ViewMessage() {
               <IonIcon icon={personCircle} color="primary"></IonIcon>
               <IonLabel className="ion-text-wrap">
                 <h2>
-                  {message.fromName}
+                  {message.title}
                   <span className="date">
                     <IonNote>{message.date}</IonNote>
                   </span>
@@ -56,7 +56,7 @@ function ViewMessage() {
             </IonItem>
 
             <div className="ion-padding">
-              <h1>{message.subject}</h1>
+              <h1>{message.contents}</h1>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
