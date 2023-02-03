@@ -1,6 +1,6 @@
 import MessageListItem from 'components/MessageListItem';
 import { useState } from 'react';
-import type { MessageInterface } from 'data/messages';
+import type { FeedInterface } from 'data/messages';
 import { getMessages } from 'data/messages';
 import {
   IonContent,
@@ -15,13 +15,40 @@ import {
 } from '@ionic/react';
 import './Home.scss';
 import SnackBarMenu from 'components/snack-bar/SnackBarMenu';
+import { collection, getDocs, query } from 'firebase/firestore/lite';
+import { db } from '../App';
 
 const Home: React.FC = () => {
-  const [messages, setMessages] = useState<MessageInterface[]>([]);
+  const [messages, setMessages] = useState<FeedInterface[]>([]);
+  const [dataList, setDataList] = useState<FeedInterface[]>([]);
 
-  useIonViewWillEnter(() => {
+  useIonViewWillEnter(async () => {
     const msgs = getMessages();
     setMessages(msgs);
+    console.debug(messages);
+    //
+    const dbRef = collection(db, 'feeds');
+    // console.debug(messages);
+    // msgs.forEach((message) => {
+    //   console.debug(message);
+    //   addDoc(dbRef, {
+    //     title: message.title,
+    //     contents: message.contents,
+    //     id: message.id,
+    //     date: message.date,
+    //     imageUrl: message.imageUrl ?? '',
+    //   });
+    // });
+
+    const q = query(dbRef);
+    console.debug(q);
+
+    const snapshot = await getDocs(q);
+    setDataList(
+      snapshot.docs.map((doc) => {
+        return doc.data() as FeedInterface;
+      }),
+    );
   });
 
   const refresh = (e: CustomEvent) => {
@@ -48,8 +75,8 @@ const Home: React.FC = () => {
         </IonHeader>
         <SnackBarMenu />
         <IonList>
-          {messages.map((m) => (
-            <MessageListItem key={m.id} message={m} />
+          {dataList.map((m, i) => (
+            <MessageListItem key={i} message={m} />
           ))}
         </IonList>
       </IonContent>
