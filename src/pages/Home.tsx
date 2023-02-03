@@ -1,7 +1,6 @@
 import MessageListItem from 'components/MessageListItem';
 import { useState } from 'react';
 import type { FeedInterface } from 'data/messages';
-import { getMessages } from 'data/messages';
 import {
   IonContent,
   IonHeader,
@@ -15,18 +14,17 @@ import {
 } from '@ionic/react';
 import './Home.scss';
 import SnackBarMenu from 'components/snack-bar/SnackBarMenu';
-import { collection, doc, getDocs, query, setDoc } from 'firebase/firestore/lite';
+import { collection, getDocs, query } from 'firebase/firestore/lite';
 import { db } from '../App';
 import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants';
 
 const Home: React.FC = () => {
-  const [messages, setMessages] = useState<FeedInterface[]>([]);
+  // const [messages, setMessages] = useState<FeedInterface[]>([]);
   const [dataList, setDataList] = useState<FeedInterface[]>([]);
 
   useIonViewWillEnter(async () => {
-    const msgs = getMessages();
-    setMessages(msgs);
-    console.debug(messages);
+    // const msgs = getMessages();
+    // setMessages(msgs);
 
     const dbRef = collection(
       db,
@@ -34,21 +32,17 @@ const Home: React.FC = () => {
       ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
     );
 
-    console.debug(messages);
-    msgs.forEach((message) => {
-      console.debug(message);
-      // deleteDoc();
-      setDoc(doc(dbRef, `feed-${message.id}`), {
-        title: message.title,
-        contents: message.contents,
-        id: message.id,
-        date: message.date,
-        imageUrl: message.imageUrl ?? '',
-      });
-    });
+    // msgs.forEach((message) => {
+    //   setDoc(doc(dbRef, `feed-${message.id}`), {
+    //     title: message.title,
+    //     contents: message.contents,
+    //     id: message.id,
+    //     date: message.date,
+    //     imageUrl: message.imageUrl ?? '',
+    //   });
+    // });
 
     const q = query(dbRef);
-    console.debug(q);
 
     const snapshot = await getDocs(q);
     setDataList(
