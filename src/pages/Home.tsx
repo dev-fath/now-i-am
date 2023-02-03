@@ -1,7 +1,6 @@
 import MessageListItem from 'components/MessageListItem';
 import { useState } from 'react';
 import type { FeedInterface } from 'data/messages';
-import { getMessages } from 'data/messages';
 import {
   IonContent,
   IonHeader,
@@ -17,21 +16,24 @@ import './Home.scss';
 import SnackBarMenu from 'components/snack-bar/SnackBarMenu';
 import { collection, getDocs, query } from 'firebase/firestore/lite';
 import { db } from '../App';
+import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants';
 
 const Home: React.FC = () => {
-  const [messages, setMessages] = useState<FeedInterface[]>([]);
+  // const [messages, setMessages] = useState<FeedInterface[]>([]);
   const [dataList, setDataList] = useState<FeedInterface[]>([]);
 
   useIonViewWillEnter(async () => {
-    const msgs = getMessages();
-    setMessages(msgs);
-    console.debug(messages);
-    //
-    const dbRef = collection(db, 'feeds');
-    // console.debug(messages);
+    // const msgs = getMessages();
+    // setMessages(msgs);
+
+    const dbRef = collection(
+      db,
+      'user',
+      ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+    );
+
     // msgs.forEach((message) => {
-    //   console.debug(message);
-    //   addDoc(dbRef, {
+    //   setDoc(doc(dbRef, `feed-${message.id}`), {
     //     title: message.title,
     //     contents: message.contents,
     //     id: message.id,
@@ -41,12 +43,11 @@ const Home: React.FC = () => {
     // });
 
     const q = query(dbRef);
-    console.debug(q);
 
     const snapshot = await getDocs(q);
     setDataList(
-      snapshot.docs.map((doc) => {
-        return doc.data() as FeedInterface;
+      snapshot.docs.map((snapShotDocument) => {
+        return snapShotDocument.data() as FeedInterface;
       }),
     );
   });
@@ -59,7 +60,7 @@ const Home: React.FC = () => {
 
   return (
     <IonPage id="home-page">
-      <IonHeader>
+      <IonHeader translucent>
         <IonToolbar>
           <IonTitle>Feed</IonTitle>
         </IonToolbar>
@@ -70,7 +71,7 @@ const Home: React.FC = () => {
         </IonRefresher>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Inbox</IonTitle>
+            <IonTitle size="large">Feed</IonTitle>
           </IonToolbar>
         </IonHeader>
         <SnackBarMenu />

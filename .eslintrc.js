@@ -69,7 +69,7 @@ module.exports = {
     '@typescript-eslint/no-unnecessary-type-arguments': 'error',
     'no-unused-expressions': 'off',
     '@typescript-eslint/no-unused-expressions': 'error',
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': 'warn',
     // React
     'react/jsx-boolean-value': 'warn',
     'react/jsx-curly-brace-presence': 'warn',
@@ -107,7 +107,14 @@ module.exports = {
     //   },
     // ],
     eqeqeq: ['error', 'always', { null: 'ignore' }],
-    indent: ['error', 2, { SwitchCase: 1, ignoredNodes: ['ConditionalExpression'] }],
+    indent: [
+      'error',
+      2,
+      {
+        SwitchCase: 1,
+        ignoredNodes: ['ConditionalExpression'],
+      },
+    ],
     'linebreak-style': ['error', 'unix'],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',

@@ -29,7 +29,8 @@ import './theme/variables.scss';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore/lite';
+import Write from 'pages/write/Write';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -59,7 +60,7 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonRouterOutlet>
+      <IonRouterOutlet mode="md">
         <Route path="/" exact>
           <Redirect to="/home" />
         </Route>
@@ -68,6 +69,9 @@ const App: React.FC = () => (
         </Route>
         <Route path="/message/:id">
           <ViewMessage />
+        </Route>
+        <Route path="/write">
+          <Write />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

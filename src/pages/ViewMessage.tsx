@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { FeedInterface } from 'data/messages';
-import { getMessage } from 'data/messages';
 import {
   IonBackButton,
   IonButtons,
@@ -17,14 +16,32 @@ import {
 import { personCircle } from 'ionicons/icons';
 import { useParams } from 'react-router';
 import './ViewMessage.scss';
+import { collection, doc, getDoc } from 'firebase/firestore/lite';
+import { db } from '../App';
+import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants';
+import { useHistory } from 'react-router-dom';
 
 function ViewMessage() {
   const [message, setMessage] = useState<FeedInterface>();
   const params = useParams<{ id: string }>();
 
-  useIonViewWillEnter(() => {
-    const msg = getMessage(params.id);
-    setMessage(msg);
+  const history = useHistory();
+
+  const dbRef = collection(
+    db,
+    'user',
+    ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+  );
+
+  useIonViewWillEnter(async () => {
+    // const q = query(dbRef, where('documentId', '==', `feed-${params.id}`));
+    const snapshot = await getDoc(doc(dbRef, `feed-${params.id}`));
+    if (!snapshot.exists()) {
+      alert('일시적인 오류입니다! 잠시 후 다시 시도해주세요.');
+      history.goBack();
+      return;
+    }
+    setMessage((snapshot.data() as FeedInterface) ?? { id: '', title: '', date: '', contents: '' });
   });
 
   return (
@@ -40,6 +57,7 @@ function ViewMessage() {
       <IonContent fullscreen>
         {message ? (
           <>
+            {!!message.imageUrl && <img src={message.imageUrl} alt="" />}
             <IonItem>
               <IonIcon icon={personCircle} color="primary"></IonIcon>
               <IonLabel className="ion-text-wrap">
