@@ -1,9 +1,9 @@
 import { IonItem, IonLabel, IonNote } from '@ionic/react';
-import type { MessageInterface } from 'data/messages';
+import type { FeedInterface } from 'data/messages';
 import './MessageListItem.scss';
 
 interface MessageListItemPropsInterface {
-  readonly message: MessageInterface;
+  readonly message: FeedInterface;
 }
 
 const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
@@ -12,7 +12,7 @@ const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
       {/*<div slot="start" className="dot dot-unread"></div>*/}
       <IonLabel>
         <div className="title-wrapper">
-          {message.fromName}
+          {message.title}
           <span className="date">
             <IonNote>{message.date}</IonNote>
           </span>
@@ -20,7 +20,7 @@ const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
         <div className="contents-container">
           {!!message.imageUrl && <img src={message.imageUrl} alt="" className="image" />}
           <div className="column-wrapper">
-            <h3>{message.subject}</h3>
+            <h3>{message.contents}</h3>
             <p className="contents">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
