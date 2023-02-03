@@ -1,4 +1,45 @@
+@import "../../styles/var";
+
+
 ion-button {
-  --padding-end: 0;
+  --padding-start: 0;
+  --padding-end: 8px;
   --ripple-color: transparent;
+  color: var(--ion-color-light);
+}
+
+.back-button-text {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+ion-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--ion-color-dark);
+}
+
+.section-divider {
+  z-index: 1;
+  height: 8px;
+  background-color: $nia-light-shade;
+}
+
+ion-input {
+  height: 56px;
+}
+
+ion-textarea {
+  min-height: 300px;
+}
+
+ion-footer {
+  padding: 0 16px;
+  display: flex;
+  height: 50px;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
 }

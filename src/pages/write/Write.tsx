@@ -1,7 +1,25 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonButton,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonPage,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react';
 
 import './Write.scss';
 import { useHistory } from 'react-router-dom';
+import {
+  arrowBack,
+  cameraOutline,
+  imagesOutline,
+  locationOutline,
+  timeOutline,
+} from 'ionicons/icons';
 
 const Write = () => {
   const history = useHistory();
@@ -18,9 +36,14 @@ const Write = () => {
         <IonToolbar>
           <IonTitle size="large">
             <div className="flex-row space-between">
-              Write
+              <div className="flex-row">
+                <IonButton slot="start" fill="clear" onClick={onClickCancel}>
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <div className="back-button-text">기록하기</div>
+              </div>
               <IonButton slot="end" fill="clear" color="tertiary" onClick={onClickCancel}>
-                취소
+                저장하기
               </IonButton>
             </div>
           </IonTitle>
@@ -29,11 +52,44 @@ const Write = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Write</IonTitle>
+            <IonTitle size="large">기록하기</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <div></div>
+        <div>
+          <IonInput placeholder="지금 나는"></IonInput>
+          <div className="section-divider" />
+          <IonTextarea autoGrow placeholder="내용을 입력해주세요" enterkeyhint="done" />
+        </div>
       </IonContent>
+      <IonFooter>
+        <IonButton fill="clear">
+          <IonIcon icon={cameraOutline} className="footer-icon" />
+        </IonButton>
+        <IonButton fill="clear">
+          <IonIcon icon={imagesOutline} className="footer-icon" />
+        </IonButton>
+        <IonButton fill="clear">
+          <IonIcon icon={timeOutline} className="footer-icon" />
+        </IonButton>
+        <IonButton fill="clear">
+          <IonIcon icon={locationOutline} className="footer-icon" />
+        </IonButton>
+      </IonFooter>
+      {/*<div id="snack-bar">*/}
+      {/*  <IonFab slot="fixed" vertical="bottom" horizontal="end">*/}
+      {/*    <IonFabButton>*/}
+      {/*      <IonIcon icon={add}></IonIcon>*/}
+      {/*    </IonFabButton>*/}
+      {/*    <IonFabList side="top">*/}
+      {/*      <IonFabButton>*/}
+      {/*        <IonIcon icon={cameraOutline}></IonIcon>*/}
+      {/*      </IonFabButton>*/}
+      {/*      <IonFabButton>*/}
+      {/*        <IonIcon icon={imagesOutline}></IonIcon>*/}
+      {/*      </IonFabButton>*/}
+      {/*    </IonFabList>*/}
+      {/*  </IonFab>*/}
+      {/*</div>*/}
     </IonPage>
   );
 };
