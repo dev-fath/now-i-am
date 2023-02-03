@@ -15,8 +15,9 @@ import {
 } from '@ionic/react';
 import './Home.scss';
 import SnackBarMenu from 'components/snack-bar/SnackBarMenu';
-import { collection, getDocs, query } from 'firebase/firestore/lite';
+import { collection, doc, getDocs, query, setDoc } from 'firebase/firestore/lite';
 import { db } from '../App';
+import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants';
 
 const Home: React.FC = () => {
   const [messages, setMessages] = useState<FeedInterface[]>([]);
@@ -26,27 +27,33 @@ const Home: React.FC = () => {
     const msgs = getMessages();
     setMessages(msgs);
     console.debug(messages);
-    //
-    const dbRef = collection(db, 'feeds');
-    // console.debug(messages);
-    // msgs.forEach((message) => {
-    //   console.debug(message);
-    //   addDoc(dbRef, {
-    //     title: message.title,
-    //     contents: message.contents,
-    //     id: message.id,
-    //     date: message.date,
-    //     imageUrl: message.imageUrl ?? '',
-    //   });
-    // });
+
+    const dbRef = collection(
+      db,
+      'user',
+      ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+    );
+
+    console.debug(messages);
+    msgs.forEach((message) => {
+      console.debug(message);
+      // deleteDoc();
+      setDoc(doc(dbRef, `feed-${message.id}`), {
+        title: message.title,
+        contents: message.contents,
+        id: message.id,
+        date: message.date,
+        imageUrl: message.imageUrl ?? '',
+      });
+    });
 
     const q = query(dbRef);
     console.debug(q);
 
     const snapshot = await getDocs(q);
     setDataList(
-      snapshot.docs.map((doc) => {
-        return doc.data() as FeedInterface;
+      snapshot.docs.map((snapShotDocument) => {
+        return snapShotDocument.data() as FeedInterface;
       }),
     );
   });
