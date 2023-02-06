@@ -19,6 +19,8 @@
     "open:ios": "ionic capacitor open ios",
     "open:android": "ionic capacitor open android",
     "build": "react-scripts build --prod",
+    "manifest": "ionic deploy manifest",
+    "deploy": "npm run build && npm run manifest && npm run sync",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
   },
