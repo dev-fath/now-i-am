@@ -1,7 +1,9 @@
 {
   "name": "now-i-am",
-  "integrations": {
-    "capacitor": {}
+  "integrations": {},
+  "type": "react",
+  "api": {
+    "token": "ion_1LesSrgLIeAfiMe17RYuvJDy0Y10UrxbCIPU06tOx4"
   },
-  "type": "react"
+  "id": "760b7584"
 }
