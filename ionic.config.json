@@ -3,5 +3,9 @@
   "integrations": {
     "capacitor": {}
   },
-  "type": "react"
+  "type": "react",
+  "api": {
+    "token": "ion_1LesSrgLIeAfiMe17RYuvJDy0Y10UrxbCIPU06tOx4"
+  },
+  "id": "760b7584"
 }

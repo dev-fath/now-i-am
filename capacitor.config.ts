@@ -5,8 +5,14 @@ const config: CapacitorConfig = {
   appName: 'now-i-am',
   webDir: 'build',
   bundledWebRuntime: false,
-  cordova: {
-    preferences: {},
+  plugins: {
+    LiveUpdates: {
+      appId: '760b7584',
+      channel: 'Production',
+      autoUpdateMethod: 'background',
+      maxVersions: 2,
+      key: '',
+    },
   },
   android: { appendUserAgent: 'now-i-am 0.0.1' },
   ios: { appendUserAgent: 'now-i-am 0.0.1' },

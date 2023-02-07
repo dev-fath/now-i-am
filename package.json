@@ -10,15 +10,19 @@
   "scripts": {
     "rimraf": "rimraf",
     "start": "react-scripts start",
-    "start:ios": "ionic capacitor run ios --external -l",
-    "start:android": "ionic capacitor run android --external -l",
+    "start:prod": "npm run build && serve -s build",
+    "start:ios": "npm run build && ionic capacitor run ios --external -l",
+    "start:android": "npm run build && ionic capacitor run android --external -l",
     "start:lab": "ionic serve --lab",
     "sync": "ionic capacitor sync",
     "sync:ios": "ionic capacitor sync ios",
     "sync:android": "ionic capacitor sync android",
+    "gradle:clean": "cd android && ./gradlew clean && cd ../",
     "open:ios": "ionic capacitor open ios",
     "open:android": "ionic capacitor open android",
-    "build": "react-scripts build --prod",
+    "build": "react-scripts build",
+    "manifest": "ionic deploy manifest",
+    "deploy": "npm run build && npm run manifest && npm run sync",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
   },
@@ -30,6 +34,7 @@
     "@capacitor/ios": "^4.6.2",
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/status-bar": "4.1.1",
+    "@ionic/cli": "^6.20.8",
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -41,7 +46,9 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "cordova-plugin-ionic": "5.5.3",
     "firebase": "^9.16.0",
+    "firebase-tools": "^11.22.0",
     "history": "^4.9.0",
     "ionicons": "^6.0.3",
     "react": "^18.2.0",
@@ -116,7 +123,7 @@
     ]
   },
   "engines": {
-    "node": "18.4.0"
+    "node": "18.12.1"
   },
   "description": "Now-I-Am"
 }
