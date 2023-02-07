@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.nowiam.devfath;
 
 import com.getcapacitor.BridgeActivity;
 
