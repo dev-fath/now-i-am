@@ -78,11 +78,19 @@ const Write = () => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const inputTitle = !!titleRef.current?.currentTarget.value;
     const title = inputTitle ? inputTitle : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
 
-    console.debug(title);
+    const location = getLocationInfo();
+    console.debug(title, location);
+  };
+
+  const getLocationInfo = async () => {
+    if ((await Geolocation.checkPermissions()).location === 'granted') {
+      return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    }
+    return null;
   };
 
   return (
