@@ -23,6 +23,7 @@ import {
 import dayjs from 'dayjs';
 import type { FormEvent } from 'react';
 import { useRef, useState } from 'react';
+import { Geolocation } from '@capacitor/geolocation';
 
 const Write = () => {
   const history = useHistory();
@@ -43,6 +44,24 @@ const Write = () => {
     event.currentTarget.getInputElement().then((el) => {
       setContents(el.value);
     });
+  };
+
+  const onClickLocationButton = async () => {
+    const isDenied = (await Geolocation.checkPermissions()).location === 'denied';
+    if (isDenied) {
+      const isDeniedDoubleCheck = (await Geolocation.requestPermissions()).location === 'denied';
+      if (!isDeniedDoubleCheck) {
+        const currentLocation = await getLocation();
+        console.debug(currentLocation);
+      }
+      return;
+    }
+    const currentLocation = await getLocation();
+    console.debug(currentLocation);
+  };
+
+  const getLocation = async () => {
+    return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
   };
 
   const onClickTimeButton = () => {
@@ -117,7 +136,7 @@ const Write = () => {
         <IonButton fill="clear" onClick={onClickTimeButton}>
           <IonIcon icon={timeOutline} className="footer-icon" />
         </IonButton>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickLocationButton}>
           <IonIcon icon={locationOutline} className="footer-icon" />
         </IonButton>
       </IonFooter>
