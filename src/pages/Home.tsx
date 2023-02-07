@@ -62,7 +62,7 @@ const Home: React.FC = () => {
     <IonPage id="home-page">
       <IonHeader translucent>
         <IonToolbar>
-          <IonTitle>appFlowTest</IonTitle>
+          <IonTitle>Feed</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
