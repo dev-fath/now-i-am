@@ -47,6 +47,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "cordova-plugin-ionic": "5.5.3",
+    "dayjs": "^1.11.7",
     "firebase": "^9.16.0",
     "firebase-tools": "^11.22.0",
     "history": "^4.9.0",

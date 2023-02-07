@@ -32,6 +32,11 @@ import { getAnalytics } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore/lite';
 import Write from 'pages/write/Write';
 
+import dayjs from 'dayjs';
+import isLeapYear from 'dayjs/plugin/isLeapYear';
+
+dayjs.extend(isLeapYear);
+dayjs.locale('ko');
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 

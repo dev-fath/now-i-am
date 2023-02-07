@@ -20,14 +20,42 @@ import {
   locationOutline,
   timeOutline,
 } from 'ionicons/icons';
+import dayjs from 'dayjs';
+import type { FormEvent } from 'react';
+import { useRef, useState } from 'react';
 
 const Write = () => {
   const history = useHistory();
+
+  const [contents, setContents] = useState('');
+
+  const textAreaRef = useRef<EventTarget & HTMLIonTextareaElement>();
   const onClickCancel = () => {
     const result = window.confirm(
       '페이지에서 벗어나면 작성된 내용이 모두 지워집니다.\n 그래도 나가시겠습니까?',
     );
     result && history.goBack();
+  };
+
+  const onChangeContents = (event: FormEvent<HTMLIonTextareaElement>) => {
+    textAreaRef.current = event.currentTarget;
+    event.currentTarget.getInputElement().then((el) => {
+      setContents(el.value);
+    });
+  };
+
+  const onClickTimeButton = () => {
+    const datetime = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    if (textAreaRef.current) {
+      textAreaRef.current?.getInputElement().then((el) => {
+        const newText =
+          contents.substring(0, el.selectionStart) +
+          datetime +
+          contents.substring(el.selectionEnd, contents.length);
+        setContents(newText);
+        el.focus();
+      });
+    }
   };
 
   return (
@@ -58,7 +86,13 @@ const Write = () => {
         <div>
           <IonInput placeholder="지금 나는"></IonInput>
           <div className="section-divider" />
-          <IonTextarea autoGrow placeholder="내용을 입력해주세요" enterkeyhint="done" />
+          <IonTextarea
+            onInput={(event) => onChangeContents(event)}
+            autoGrow
+            placeholder="내용을 입력해주세요"
+            enterkeyhint="done"
+            value={contents}
+          />
         </div>
       </IonContent>
       <IonFooter>
@@ -68,28 +102,13 @@ const Write = () => {
         <IonButton fill="clear">
           <IonIcon icon={imagesOutline} className="footer-icon" />
         </IonButton>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickTimeButton}>
           <IonIcon icon={timeOutline} className="footer-icon" />
         </IonButton>
         <IonButton fill="clear">
           <IonIcon icon={locationOutline} className="footer-icon" />
         </IonButton>
       </IonFooter>
-      {/*<div id="snack-bar">*/}
-      {/*  <IonFab slot="fixed" vertical="bottom" horizontal="end">*/}
-      {/*    <IonFabButton>*/}
-      {/*      <IonIcon icon={add}></IonIcon>*/}
-      {/*    </IonFabButton>*/}
-      {/*    <IonFabList side="top">*/}
-      {/*      <IonFabButton>*/}
-      {/*        <IonIcon icon={cameraOutline}></IonIcon>*/}
-      {/*      </IonFabButton>*/}
-      {/*      <IonFabButton>*/}
-      {/*        <IonIcon icon={imagesOutline}></IonIcon>*/}
-      {/*      </IonFabButton>*/}
-      {/*    </IonFabList>*/}
-      {/*  </IonFab>*/}
-      {/*</div>*/}
     </IonPage>
   );
 };
