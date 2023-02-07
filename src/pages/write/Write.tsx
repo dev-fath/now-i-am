@@ -29,6 +29,7 @@ const Write = () => {
 
   const [contents, setContents] = useState('');
 
+  const titleRef = useRef<FormEvent<HTMLIonInputElement>>();
   const textAreaRef = useRef<EventTarget & HTMLIonTextareaElement>();
   const onClickCancel = () => {
     const result = window.confirm(
@@ -58,6 +59,13 @@ const Write = () => {
     }
   };
 
+  const onSubmit = () => {
+    const inputTitle = !!titleRef.current?.currentTarget.value;
+    const title = inputTitle ? inputTitle : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
+
+    console.debug(title);
+  };
+
   return (
     <IonPage>
       <IonHeader translucent>
@@ -70,7 +78,7 @@ const Write = () => {
                 </IonButton>
                 <div className="back-button-text">기록하기</div>
               </div>
-              <IonButton slot="end" fill="clear" color="tertiary" onClick={onClickCancel}>
+              <IonButton slot="end" fill="clear" color="tertiary" onClick={onSubmit}>
                 저장하기
               </IonButton>
             </div>
@@ -84,7 +92,11 @@ const Write = () => {
           </IonToolbar>
         </IonHeader>
         <div>
-          <IonInput placeholder="지금 나는"></IonInput>
+          <IonInput
+            id="title"
+            ref={() => titleRef}
+            placeholder={dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분') + ' 지금 나는'}
+          ></IonInput>
           <div className="section-divider" />
           <IonTextarea
             onInput={(event) => onChangeContents(event)}
