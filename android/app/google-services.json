@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "459022669812",
+    "firebase_url": "https://now-i-am-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "now-i-am",
+    "storage_bucket": "now-i-am.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459022669812:android:044281069eabbcd44c0ba1",
+        "android_client_info": {
+          "package_name": "com.nowiam.devfath"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459022669812-10hrpdrv33uin8t86kgg7fl674cgviad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPubNV8z9C8ZkVIRWtfalUUcDXy-WVi9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459022669812-10hrpdrv33uin8t86kgg7fl674cgviad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
