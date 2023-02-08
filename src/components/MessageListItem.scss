@@ -10,8 +10,11 @@ ion-note {
 }
 
 .title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-weight: bold;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 ion-label {
