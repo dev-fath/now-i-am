@@ -2,13 +2,18 @@
 http://ionicframework.com/docs/theming/ */
 
 @font-face {
-  font-family: NanumSquare_ac;
-  src: url('../assets/fonts/NanumSquare_acR.ttf');
+  font-family: LineSeedKR;
+  src: url('../assets/fonts/LINESeedKR-Rg.woff2');
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url('../assets/fonts/Montserrat-Medium.ttf');
 }
 
 /** Ionic CSS Variables **/
 :root {
-  --ion-font-family: NanumSquare_ac;
+  --ion-font-family: LineSeedKR;
   /** primary **/
   --ion-color-primary: #F2D399;
   --ion-color-primary-rgb: 56, 128, 255;

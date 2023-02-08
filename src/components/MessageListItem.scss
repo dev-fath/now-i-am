@@ -5,6 +5,9 @@ ion-item {
   --inner-padding-end: 8px;
 }
 
+ion-note {
+  font-family: Montserrat;
+}
 
 .title-wrapper {
   font-weight: bold;
@@ -59,19 +62,23 @@ ion-footer ion-title {
   flex-direction: row;
   align-items: center;
   gap: 8px;
+
   .image {
     min-width: 80px;
-    flex:1;
+    flex: 1;
     padding: 8px 0;
   }
-  .column-wrapper{
-    flex:4;
+
+  .column-wrapper {
+    flex: 4;
     max-width: 100%;
+
     h3 {
       font-weight: 700;
       margin-bottom: 8px;
     }
   }
+
   .contents {
     @include truncate(2);
     line-height: 16px;
