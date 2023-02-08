@@ -6,3 +6,13 @@
   bottom: 16px;
   z-index: 1;
 }
+
+ion-fab {
+  .main {
+    --ionicon-stroke-width: 40px;
+  }
+
+  ion-fab-list {
+    --ionicon-stroke-width: 28px;
+  }
+}
