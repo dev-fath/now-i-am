@@ -32,6 +32,8 @@ import { getAnalytics } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore/lite';
 import Write from 'pages/write/Write';
 
+import { MobileAccessibility } from '@ionic-native/mobile-accessibility';
+
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
@@ -62,27 +64,34 @@ analytics.app.automaticDataCollectionEnabled = true;
 
 export const db = getFirestore();
 
+MobileAccessibility.setTextZoom(100);
+MobileAccessibility.updateTextZoom();
+// eslint-disable-next-line react-hooks/rules-of-hooks
+MobileAccessibility.usePreferredTextZoom(false);
+
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet mode="md">
-        <Route path="/" exact>
-          <Redirect to="/home" />
-        </Route>
-        <Route path="/home" exact>
-          <Home />
-        </Route>
-        <Route path="/message/:id">
-          <ViewMessage />
-        </Route>
-        <Route path="/write">
-          <Write />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet mode="md">
+          <Route path="/" exact>
+            <Redirect to="/home" />
+          </Route>
+          <Route path="/home" exact>
+            <Home />
+          </Route>
+          <Route path="/message/:id">
+            <ViewMessage />
+          </Route>
+          <Route path="/write">
+            <Write />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
