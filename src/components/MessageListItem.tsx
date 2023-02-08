@@ -1,10 +1,15 @@
 import { IonItem, IonLabel, IonNote } from '@ionic/react';
 import type { FeedInterface } from 'data/messages';
 import './MessageListItem.scss';
+import dayjs from 'dayjs';
 
 interface MessageListItemPropsInterface {
   readonly message: FeedInterface;
 }
+
+const timestampConverter = (datetime: string) => {
+  return dayjs(datetime).locale('en').format('A hh:mm');
+};
 
 const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
   return (
@@ -14,7 +19,7 @@ const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
         <div className="title-wrapper">
           {message.title}
           <span className="date">
-            <IonNote>{message.date}</IonNote>
+            <IonNote>{timestampConverter(message.date)}</IonNote>
           </span>
         </div>
         <div className="contents-container">
