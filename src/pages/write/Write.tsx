@@ -23,6 +23,7 @@ import {
 import dayjs from 'dayjs';
 import type { FormEvent } from 'react';
 import { useRef, useState } from 'react';
+import { Geolocation } from '@capacitor/geolocation';
 
 const Write = () => {
   const history = useHistory();
@@ -45,6 +46,24 @@ const Write = () => {
     });
   };
 
+  const onClickLocationButton = async () => {
+    const isDenied = (await Geolocation.checkPermissions()).location === 'denied';
+    if (isDenied) {
+      const isDeniedDoubleCheck = (await Geolocation.requestPermissions()).location === 'denied';
+      if (!isDeniedDoubleCheck) {
+        const currentLocation = await getLocation();
+        console.debug(currentLocation);
+      }
+      return;
+    }
+    const currentLocation = await getLocation();
+    console.debug(currentLocation);
+  };
+
+  const getLocation = async () => {
+    return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+  };
+
   const onClickTimeButton = () => {
     const datetime = dayjs().format('YYYY-MM-DD HH:mm:ss');
     if (textAreaRef.current) {
@@ -59,11 +78,19 @@ const Write = () => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const inputTitle = !!titleRef.current?.currentTarget.value;
     const title = inputTitle ? inputTitle : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
 
-    console.debug(title);
+    const location = getLocationInfo();
+    console.debug(title, location);
+  };
+
+  const getLocationInfo = async () => {
+    if ((await Geolocation.checkPermissions()).location === 'granted') {
+      return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    }
+    return null;
   };
 
   return (
@@ -117,7 +144,7 @@ const Write = () => {
         <IonButton fill="clear" onClick={onClickTimeButton}>
           <IonIcon icon={timeOutline} className="footer-icon" />
         </IonButton>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickLocationButton}>
           <IonIcon icon={locationOutline} className="footer-icon" />
         </IonButton>
       </IonFooter>
