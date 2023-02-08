@@ -1,8 +1,14 @@
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 
+@font-face {
+  font-family: NanumSquare_ac;
+  src: url('../assets/fonts/NanumSquare_acR.ttf');
+}
+
 /** Ionic CSS Variables **/
 :root {
+  --ion-font-family: NanumSquare_ac;
   /** primary **/
   --ion-color-primary: #F2D399;
   --ion-color-primary-rgb: 56, 128, 255;
