@@ -33,7 +33,7 @@ module.exports = {
   },
   rules: {
     // General
-    'no-console': ['error', { allow: ['debug', 'warn', 'error'] }],
+    'no-console': ['warn', { allow: ['debug', 'warn', 'error'] }],
     // TypeScript
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -108,7 +108,7 @@ module.exports = {
     // ],
     eqeqeq: ['error', 'always', { null: 'ignore' }],
     indent: [
-      'error',
+      'warn',
       2,
       {
         SwitchCase: 1,
@@ -118,9 +118,9 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    quotes: ['error', 'single', { avoidEscape: true }],
-    semi: ['error', 'always'],
-    'no-multiple-empty-lines': ['error', { max: 1 }],
+    quotes: ['warn', 'single', { avoidEscape: true }],
+    semi: ['warn', 'always'],
+    'no-multiple-empty-lines': ['warn', { max: 1 }],
     'no-empty-function': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     // '@typescript-eslint/no-explicit-any': 'off',

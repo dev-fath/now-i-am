@@ -36,7 +36,10 @@ const Write = () => {
     const result = window.confirm(
       '페이지에서 벗어나면 작성된 내용이 모두 지워집니다.\n 그래도 나가시겠습니까?',
     );
-    result && history.goBack();
+
+    if (result) {
+      history.goBack();
+    }
   };
 
   const onChangeContents = (event: FormEvent<HTMLIonTextareaElement>) => {
@@ -103,7 +106,7 @@ const Write = () => {
                 <IonButton slot="start" fill="clear" onClick={onClickCancel}>
                   <IonIcon icon={arrowBack} />
                 </IonButton>
-                <div className="back-button-text">기록하기</div>
+                {/*<div className="back-button-text">기록하기</div>*/}
               </div>
               <IonButton slot="end" fill="clear" color="tertiary" onClick={onSubmit}>
                 저장하기
@@ -114,9 +117,19 @@ const Write = () => {
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">기록하기</IonTitle>
-          </IonToolbar>
+          <IonTitle size="large">
+            <div className="flex-row space-between">
+              <div className="flex-row">
+                <IonButton slot="start" fill="clear" onClick={onClickCancel}>
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                {/*<div className="back-button-text">기록하기</div>*/}
+              </div>
+              <IonButton slot="end" fill="clear" color="tertiary" onClick={onSubmit}>
+                저장하기
+              </IonButton>
+            </div>
+          </IonTitle>
         </IonHeader>
         <div>
           <IonInput

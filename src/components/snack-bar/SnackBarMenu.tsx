@@ -1,5 +1,5 @@
 import { IonFab, IonFabButton, IonFabList, IonIcon } from '@ionic/react';
-import { closeOutline, filterOutline, mapOutline, menuOutline } from 'ionicons/icons';
+import { addOutline, closeOutline, filterOutline, mapOutline, menuOutline } from 'ionicons/icons';
 
 import './SnackBarMenu.scss';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,10 @@ const SnackBarMenu = () => {
   const history = useHistory();
   const onClickAddItem = () => {
     history.push('/write');
+  };
+
+  const onClickMapItem = () => {
+    history.push('/map');
   };
 
   return (
@@ -20,8 +24,11 @@ const SnackBarMenu = () => {
           <IonFabButton className="sub">
             <IonIcon icon={filterOutline}></IonIcon>
           </IonFabButton>
-          <IonFabButton className="sub" onClick={onClickAddItem}>
+          <IonFabButton className="sub" onClick={onClickMapItem}>
             <IonIcon icon={mapOutline}></IonIcon>
+          </IonFabButton>
+          <IonFabButton className="sub" onClick={onClickAddItem}>
+            <IonIcon icon={addOutline}></IonIcon>
           </IonFabButton>
         </IonFabList>
       </IonFab>

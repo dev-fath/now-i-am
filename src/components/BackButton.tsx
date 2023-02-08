@@ -1,14 +1,23 @@
-import { IonBackButton, IonButtons, IonToolbar } from '@ionic/react';
+import { IonIcon } from '@ionic/react';
+import { useHistory } from 'react-router-dom';
+import { arrowBack } from 'ionicons/icons';
 
-const BackButton = (props: { title: string }) => {
-  const { title } = props;
+const BackButton = (props: { defaultHref: string }) => {
+  const { defaultHref } = props;
+  const history = useHistory();
+
+  const onClickBackButton = () => {
+    if (history.length < 2) {
+      history.replace(defaultHref);
+      return;
+    }
+    history.goBack();
+  };
 
   return (
-    <IonToolbar>
-      <IonButtons slot="start">
-        <IonBackButton text={title} defaultHref="/home"></IonBackButton>
-      </IonButtons>
-    </IonToolbar>
+    <div className="back-button-container" onClick={onClickBackButton}>
+      <IonIcon icon={arrowBack} />
+    </div>
   );
 };
 
