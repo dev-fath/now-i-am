@@ -4,6 +4,7 @@ import {
   IonFooter,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonPage,
   IonTextarea,
@@ -25,12 +26,17 @@ import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import type { ReadFileResult } from '@capacitor/filesystem';
+import { Filesystem } from '@capacitor/filesystem';
 
 const Write = () => {
   const history = useHistory();
 
   const [contents, setContents] = useState('');
   const [imageSrc, setImageSrc] = useState('');
+  const [imageFile, setImageFile] = useState<ReadFileResult>({ data: '' });
+
+  const formData = new FormData();
 
   const titleRef = useRef<FormEvent<HTMLIonInputElement>>();
   const textAreaRef = useRef<EventTarget & HTMLIonTextareaElement>();
@@ -59,7 +65,20 @@ const Write = () => {
       source: CameraSource.Photos,
     });
 
-    setImageSrc(image.webPath ?? '');
+    if (!image.path) {
+      alert('이미지 처리중 에러가 발생했습니다. \n 잠시 후 다시 시도해주세요');
+      return;
+    }
+    const file = await Filesystem.readFile({
+      path: image.path ?? '',
+    });
+
+    setImageFile(file);
+
+    formData.set('image', file.data);
+
+    setImageSrc(`data:image/png;base64, ${file.data}`);
+    // formData.set('image');
   };
 
   const onClickCamaraButton = async () => {
@@ -71,13 +90,15 @@ const Write = () => {
       saveToGallery: true,
     });
 
-    // image.webPath will contain a path that can be set as an image src.
-    // You can access the original file using image.path, which can be
-    // passed to the Filesystem API to read the raw data of the image,
-    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+    const file = await Filesystem.readFile({
+      path: image.path ?? '',
+    });
 
-    // Can be set to the src of an image now
-    setImageSrc(image.webPath ?? '');
+    setImageFile(file);
+
+    formData.set('image', file.data);
+
+    setImageSrc(`data:image/png;base64, ${file.data}`);
   };
 
   useEffect(() => {
@@ -117,14 +138,22 @@ const Write = () => {
   };
 
   const onSubmit = async () => {
-    const inputTitle = !!titleRef.current?.currentTarget.value;
-    const title = inputTitle ? inputTitle : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
+    const inputTitle = titleRef.current?.currentTarget.value;
+    const title = inputTitle
+      ? inputTitle.toString()
+      : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
 
-    const location = getLocationInfo();
-    console.debug(title, location);
+    const location = (await getLocationInfo())?.coords;
+
+    formData.set('title', title);
+    formData.set('location', JSON.stringify(location));
+    formData.set('image', JSON.stringify(imageFile));
+
+    console.debug(title, location, imageFile, formData.entries());
   };
 
   const getLocationInfo = async () => {
+    await Geolocation.requestPermissions();
     if ((await Geolocation.checkPermissions()).location === 'granted') {
       return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     }
@@ -167,7 +196,7 @@ const Write = () => {
           </IonTitle>
         </IonHeader>
         <div>
-          {!!imageSrc && <img src={imageSrc} alt="" />}
+          {!!imageSrc && <IonImg src={imageSrc} alt="" className="image" />}
           <IonInput
             id="title"
             ref={() => titleRef}
