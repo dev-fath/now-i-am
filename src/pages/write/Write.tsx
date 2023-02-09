@@ -23,20 +23,30 @@ import {
 } from 'ionicons/icons';
 import dayjs from 'dayjs';
 import type { FormEvent } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import type { ReadFileResult } from '@capacitor/filesystem';
 import { Filesystem } from '@capacitor/filesystem';
+import { collection, doc, setDoc } from 'firebase/firestore/lite';
+import { db } from '../../App';
+import { firebaseCollectionPath, firebaseDocuments } from '../../constant/constants';
 
 const Write = () => {
   const history = useHistory();
 
+  const dbRef = collection(
+    db,
+    'user',
+    ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+  );
+
   const [contents, setContents] = useState('');
   const [imageSrc, setImageSrc] = useState('');
   const [imageFile, setImageFile] = useState<ReadFileResult>({ data: '' });
-
-  const formData = new FormData();
+  const now = useMemo(() => {
+    return dayjs();
+  }, []);
 
   const titleRef = useRef<FormEvent<HTMLIonInputElement>>();
   const textAreaRef = useRef<EventTarget & HTMLIonTextareaElement>();
@@ -70,15 +80,12 @@ const Write = () => {
       return;
     }
     const file = await Filesystem.readFile({
-      path: image.path ?? '',
+      path: image.path,
     });
 
     setImageFile(file);
 
-    formData.set('image', file.data);
-
     setImageSrc(`data:image/png;base64, ${file.data}`);
-    // formData.set('image');
   };
 
   const onClickCamaraButton = async () => {
@@ -90,14 +97,15 @@ const Write = () => {
       saveToGallery: true,
     });
 
+    if (!image.path) {
+      return;
+    }
+
     const file = await Filesystem.readFile({
-      path: image.path ?? '',
+      path: image.path,
     });
 
     setImageFile(file);
-
-    formData.set('image', file.data);
-
     setImageSrc(`data:image/png;base64, ${file.data}`);
   };
 
@@ -141,15 +149,24 @@ const Write = () => {
     const inputTitle = titleRef.current?.currentTarget.value;
     const title = inputTitle
       ? inputTitle.toString()
-      : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
+      : now.format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
 
     const location = (await getLocationInfo())?.coords;
 
-    formData.set('title', title);
-    formData.set('location', JSON.stringify(location));
-    formData.set('image', JSON.stringify(imageFile));
-
-    console.debug(title, location, imageFile, formData.entries());
+    try {
+      await setDoc(doc(dbRef), {
+        title: title,
+        contents: contents,
+        location: JSON.stringify(location),
+        date: now.format('YYYY-MM-DD HH:mm:ss'),
+        imageUrl: JSON.stringify(imageFile),
+      });
+      history.replace('../');
+    } catch (e: unknown) {
+      console.error(e);
+      alert('에러가 발생했습니다. 다시 시도해주세요.');
+      return;
+    }
   };
 
   const getLocationInfo = async () => {
@@ -200,7 +217,7 @@ const Write = () => {
           <IonInput
             id="title"
             ref={() => titleRef}
-            placeholder={dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분') + ' 지금 나는'}
+            placeholder={now.format('YYYY년 MM월 DD일 ddd요일 HH시 mm분') + ' 지금 나는'}
           ></IonInput>
           <div className="section-divider" />
           <IonTextarea

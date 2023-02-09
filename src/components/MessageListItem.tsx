@@ -23,7 +23,7 @@ const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
           </span>
         </div>
         <div className="contents-container">
-          {!!message.imageUrl && <img src={message.imageUrl} alt="" className="image" />}
+          {!!message.imageUrl?.data && <img src={message.imageUrl.data} alt="" className="image" />}
           <div className="column-wrapper">
             <h3>{message.contents}</h3>
             <p className="contents">

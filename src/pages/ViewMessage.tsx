@@ -57,7 +57,7 @@ function ViewMessage() {
       <IonContent fullscreen>
         {message ? (
           <>
-            {!!message.imageUrl && <img src={message.imageUrl} alt="" />}
+            {!!message.imageUrl?.data && <img src={message.imageUrl.data} alt="" />}
             <IonItem>
               <IonIcon icon={personCircle} color="primary"></IonIcon>
               <IonLabel className="ion-text-wrap">
