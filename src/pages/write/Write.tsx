@@ -26,7 +26,6 @@ import type { FormEvent } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import type { ReadFileResult } from '@capacitor/filesystem';
 import { Filesystem } from '@capacitor/filesystem';
 import { collection, doc, setDoc } from 'firebase/firestore/lite';
 import { db } from '../../App';
@@ -43,7 +42,6 @@ const Write = () => {
 
   const [contents, setContents] = useState('');
   const [imageSrc, setImageSrc] = useState('');
-  const [imageFile, setImageFile] = useState<ReadFileResult>({ data: '' });
   const now = useMemo(() => {
     return dayjs();
   }, []);
@@ -83,9 +81,9 @@ const Write = () => {
       path: image.path,
     });
 
-    setImageFile(file);
-
-    setImageSrc(`data:image/png;base64, ${file.data}`);
+    if (file.data) {
+      setImageSrc(`data:image/png;base64, ${file.data}`);
+    }
   };
 
   const onClickCamaraButton = async () => {
@@ -105,8 +103,9 @@ const Write = () => {
       path: image.path,
     });
 
-    setImageFile(file);
-    setImageSrc(`data:image/png;base64, ${file.data}`);
+    if (file.data) {
+      setImageSrc(`data:image/png;base64, ${file.data}`);
+    }
   };
 
   useEffect(() => {
@@ -159,7 +158,7 @@ const Write = () => {
         contents: contents,
         location: JSON.stringify(location),
         date: now.format('YYYY-MM-DD HH:mm:ss'),
-        imageUrl: JSON.stringify(imageFile),
+        imageUrl: imageSrc,
       });
       history.replace('../');
     } catch (e: unknown) {

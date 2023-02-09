@@ -12,7 +12,7 @@ export interface FeedInterface {
     speed: number;
     heading: number;
   };
-  imageUrl?: { data: string };
+  imageUrl?: string;
   category?: string;
 }
 

@@ -38,7 +38,7 @@ const Home: React.FC = () => {
         return {
           ...feedResponse,
           location: !!feedResponse.location && JSON.parse(feedResponse.location),
-          imageUrl: !!feedResponse.imageUrl && JSON.parse(feedResponse.imageUrl),
+          imageUrl: feedResponse.imageUrl,
         };
       }),
     );
