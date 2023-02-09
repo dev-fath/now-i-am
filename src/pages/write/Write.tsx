@@ -22,13 +22,15 @@ import {
 } from 'ionicons/icons';
 import dayjs from 'dayjs';
 import type { FormEvent } from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 const Write = () => {
   const history = useHistory();
 
   const [contents, setContents] = useState('');
+  const [imageSrc, setImageSrc] = useState('');
 
   const titleRef = useRef<FormEvent<HTMLIonInputElement>>();
   const textAreaRef = useRef<EventTarget & HTMLIonTextareaElement>();
@@ -48,6 +50,39 @@ const Write = () => {
       setContents(el.value);
     });
   };
+
+  const onClickGalleryButton = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Photos,
+    });
+
+    setImageSrc(image.webPath ?? '');
+  };
+
+  const onClickCamaraButton = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      saveToGallery: true,
+    });
+
+    // image.webPath will contain a path that can be set as an image src.
+    // You can access the original file using image.path, which can be
+    // passed to the Filesystem API to read the raw data of the image,
+    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+
+    // Can be set to the src of an image now
+    setImageSrc(image.webPath ?? '');
+  };
+
+  useEffect(() => {
+    console.debug(imageSrc);
+  }, [imageSrc]);
 
   const onClickLocationButton = async () => {
     const isDenied = (await Geolocation.checkPermissions()).location === 'denied';
@@ -132,6 +167,7 @@ const Write = () => {
           </IonTitle>
         </IonHeader>
         <div>
+          {!!imageSrc && <img src={imageSrc} alt="" />}
           <IonInput
             id="title"
             ref={() => titleRef}
@@ -148,10 +184,10 @@ const Write = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickCamaraButton}>
           <IonIcon icon={cameraOutline} className="footer-icon" />
         </IonButton>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickGalleryButton}>
           <IonIcon icon={imagesOutline} className="footer-icon" />
         </IonButton>
         <IonButton fill="clear" onClick={onClickTimeButton}>
