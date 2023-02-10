@@ -37,6 +37,7 @@ const Home: React.FC = () => {
 
         return {
           ...feedResponse,
+          id: snapShotDocument.id,
           location: !!feedResponse.location && JSON.parse(feedResponse.location),
           imageUrl: feedResponse.imageUrl,
         };
