@@ -1,9 +1,11 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { Camera } from '@capacitor/camera';
+
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import ViewMessage from './pages/ViewMessage';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -38,6 +40,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import Map from 'pages/Map';
+import { getStorage, ref as fireStorageRef } from '@firebase/storage';
 
 dayjs.extend(isLeapYear);
 dayjs.locale('ko');
@@ -61,7 +64,10 @@ console.debug(process.env);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+export const fireStorage = getStorage(app);
+fireStorageRef(fireStorage, 'images');
 
+fireStorage.app.automaticDataCollectionEnabled = true;
 analytics.app.automaticDataCollectionEnabled = true;
 
 export const db = getFirestore();
@@ -74,6 +80,12 @@ MobileAccessibility.usePreferredTextZoom(false);
 setupIonicReact();
 
 const App: React.FC = () => {
+  const requestCameraPermissions = useCallback(async () => {
+    await Camera.requestPermissions();
+  }, []);
+  useEffect(() => {
+    void requestCameraPermissions();
+  }, [requestCameraPermissions]);
   return (
     <IonApp>
       <IonReactRouter>

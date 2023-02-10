@@ -1,6 +1,6 @@
 import MessageListItem from 'components/MessageListItem';
 import { useState } from 'react';
-import type { FeedInterface } from 'data/messages';
+import type { FeedInterface, FeedResponseInterface } from 'data/messages';
 import {
   IonContent,
   IonHeader,
@@ -19,35 +19,28 @@ import { db } from '../App';
 import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants';
 
 const Home: React.FC = () => {
-  // const [messages, setMessages] = useState<FeedInterface[]>([]);
   const [dataList, setDataList] = useState<FeedInterface[]>([]);
 
   useIonViewWillEnter(async () => {
-    // const msgs = getMessages();
-    // setMessages(msgs);
-
     const dbRef = collection(
       db,
       'user',
       ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
     );
 
-    // msgs.forEach((message) => {
-    //   setDoc(doc(dbRef, `feed-${message.id}`), {
-    //     title: message.title,
-    //     contents: message.contents,
-    //     id: message.id,
-    //     date: message.date,
-    //     imageUrl: message.imageUrl ?? '',
-    //   });
-    // });
-
     const q = query(dbRef);
 
     const snapshot = await getDocs(q);
     setDataList(
       snapshot.docs.map((snapShotDocument) => {
-        return snapShotDocument.data() as FeedInterface;
+        const feedResponse = snapShotDocument.data() as FeedResponseInterface;
+
+        return {
+          ...feedResponse,
+          id: snapShotDocument.id,
+          location: !!feedResponse.location && JSON.parse(feedResponse.location),
+          imageUrl: feedResponse.imageUrl,
+        };
       }),
     );
   });

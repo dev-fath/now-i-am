@@ -1100,6 +1100,11 @@
   resolved "https://registry.npmjs.org/@capacitor/app/-/app-4.1.1.tgz"
   integrity sha512-SJcJA1rhFQyeH6eLfUEbdKkHzAwzahJNVPNXmU88fdmXpMgM2dJGzZj1vrm6e21aQq+Z4aBVLJ2RCdj92zD7wg==
 
+"@capacitor/camera@^4.1.4":
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/@capacitor/camera/-/camera-4.1.4.tgz#5d019f88d1f3547b537270e35bcb96084eb48df6"
+  integrity sha512-7f4n7PlnstYsdGyxc0Kc4hIyS6csFLOjXvffm7pJsuy9pSo+kfdOPdYgGg360QwbUAmA+Yv+J1ZW1eFIwgvWrQ==
+
 "@capacitor/cli@4.6.2":
   version "4.6.2"
   resolved "https://registry.npmjs.org/@capacitor/cli/-/cli-4.6.2.tgz"
@@ -1129,6 +1134,11 @@
   integrity sha512-M/KpAg+peft/HTb7svLiKHxjbll67ybs1vEqhZuvjXlwro53NxNXR4YJS7+wNXZSiA4Kxjtf+a754xGgZcMarA==
   dependencies:
     tslib "^2.1.0"
+
+"@capacitor/filesystem@^4.1.4":
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-4.1.4.tgz#021ef707ca199d554042ebc85151416dec07020a"
+  integrity sha512-ivko1RNK4hq63xhMacq8D6D97N5/SAafTsrmY/pghYrG6Cl2SEY0+IgRu7V9/VWeN3FSplyUPucjUTAFQxXN5g==
 
 "@capacitor/geolocation@^4.1.0":
   version "4.1.0"
@@ -1422,6 +1432,14 @@
     "@firebase/util" "1.9.0"
     tslib "^2.1.0"
 
+"@firebase/component@0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@firebase/component/-/component-0.6.3.tgz#2baea3fa37861eef314a612eba194b0ff7c7ac11"
+  integrity sha512-rnhq5SOsB5nuJphZF50iwqnBiuuyg9kdnlUn1rBrKfu7/cUVJZF5IG1cWrL0rXXyiZW1WBI/J2pmTvVO8dStGQ==
+  dependencies:
+    "@firebase/util" "1.9.2"
+    tslib "^2.1.0"
+
 "@firebase/database-compat@0.3.1":
   version "0.3.1"
   resolved "https://registry.npmjs.org/@firebase/database-compat/-/database-compat-0.3.1.tgz"
@@ -1655,10 +1673,27 @@
     node-fetch "2.6.7"
     tslib "^2.1.0"
 
+"@firebase/storage@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@firebase/storage/-/storage-0.11.1.tgz#602ddb7bce77077800a46bcdfa76f36d7a265c51"
+  integrity sha512-Xv8EG2j52ugF2xayBz26U9J0VBXHXPMVxSN+ph3R3BSoHxvMLaPu+qUYKHavSt+zbcgPH2GyBhrCdJK6SaDFPA==
+  dependencies:
+    "@firebase/component" "0.6.3"
+    "@firebase/util" "1.9.2"
+    node-fetch "2.6.7"
+    tslib "^2.1.0"
+
 "@firebase/util@1.9.0":
   version "1.9.0"
   resolved "https://registry.npmjs.org/@firebase/util/-/util-1.9.0.tgz"
   integrity sha512-oeoq/6Sr9btbwUQs5HPfeww97bf7qgBbkknbDTXpRaph2LZ23O9XLCE5tJy856SBmGQfO4xBZP8dyryLLM2nSQ==
+  dependencies:
+    tslib "^2.1.0"
+
+"@firebase/util@1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@firebase/util/-/util-1.9.2.tgz#f5e9e393c5bae3547b9c823ee12076be1e23b1e2"
+  integrity sha512-9l0uMGPGw3GsoD5khjMmYCCcMq/OR/OOSViiWMN+s2Q0pxM+fYzrii1H+r8qC/uoMjSVXomjLZt0vZIyryCqtQ==
   dependencies:
     tslib "^2.1.0"
 

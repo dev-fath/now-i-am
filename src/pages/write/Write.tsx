@@ -4,6 +4,7 @@ import {
   IonFooter,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonPage,
   IonTextarea,
@@ -22,13 +23,32 @@ import {
 } from 'ionicons/icons';
 import dayjs from 'dayjs';
 import type { FormEvent } from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
+import type { Photo } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Filesystem } from '@capacitor/filesystem';
+import { collection, doc, setDoc } from 'firebase/firestore/lite';
+import { db, fireStorage } from '../../App';
+import { firebaseCollectionPath, firebaseDocuments } from '../../constant/constants';
+import { ref as fireStorageRef, uploadBytes } from '@firebase/storage';
 
 const Write = () => {
   const history = useHistory();
 
+  // const storageRef = fireStorageRef(fireStorage, imageName); // 파일 읽기
+  const dbRef = collection(
+    db,
+    'user',
+    ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+  );
+
   const [contents, setContents] = useState('');
+  const [imageSrc, setImageSrc] = useState('');
+  const selectedImage = useRef<Photo>({ saved: false, format: 'png', exif: '' });
+  const now = useMemo(() => {
+    return dayjs();
+  }, []);
 
   const titleRef = useRef<FormEvent<HTMLIonInputElement>>();
   const textAreaRef = useRef<EventTarget & HTMLIonTextareaElement>();
@@ -48,6 +68,58 @@ const Write = () => {
       setContents(el.value);
     });
   };
+
+  const onClickGalleryButton = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Photos,
+    });
+
+    if (!image.path) {
+      alert('이미지 처리중 에러가 발생했습니다. \n 잠시 후 다시 시도해주세요');
+      return;
+    }
+
+    selectedImage.current = image;
+
+    const file = await Filesystem.readFile({
+      path: image.path,
+    });
+
+    if (file.data) {
+      setImageSrc(`data:image/png;base64, ${file.data}`);
+    }
+  };
+
+  const onClickCamaraButton = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      saveToGallery: true,
+    });
+
+    if (!image.path) {
+      return;
+    }
+
+    selectedImage.current = image;
+
+    const file = await Filesystem.readFile({
+      path: image.path,
+    });
+
+    if (file.data) {
+      setImageSrc(`data:image/png;base64, ${file.data}`);
+    }
+  };
+
+  useEffect(() => {
+    console.debug(imageSrc);
+  }, [imageSrc]);
 
   const onClickLocationButton = async () => {
     const isDenied = (await Geolocation.checkPermissions()).location === 'denied';
@@ -82,18 +154,61 @@ const Write = () => {
   };
 
   const onSubmit = async () => {
-    const inputTitle = !!titleRef.current?.currentTarget.value;
-    const title = inputTitle ? inputTitle : dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
+    const inputTitle = titleRef.current?.currentTarget.value;
+    const title = inputTitle
+      ? inputTitle.toString()
+      : now.format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
 
-    const location = getLocationInfo();
-    console.debug(title, location);
+    const a = selectedImage.current.path?.split('/') ?? [];
+    const filename = a[a.length - 1];
+
+    const location = (await getLocationInfo())?.coords;
+    console.debug(selectedImage.current);
+    const ref = fireStorageRef(fireStorage, `images/${filename}`);
+    const imageFile = base64ToImage(imageSrc);
+
+    try {
+      // console.log('adsf');
+      const x = await uploadBytes(ref, imageFile);
+
+      console.debug(x);
+    } catch (e: unknown) {
+      console.error(e);
+    }
+
+    try {
+      await setDoc(doc(dbRef), {
+        title: title,
+        contents: contents,
+        location: JSON.stringify(location),
+        date: now.format('YYYY-MM-DD HH:mm:ss'),
+        imageUrl: `images/${filename}`,
+      });
+      history.replace('../');
+    } catch (e: unknown) {
+      console.error(e);
+      alert('에러가 발생했습니다. 다시 시도해주세요.');
+      return;
+    }
   };
 
   const getLocationInfo = async () => {
+    await Geolocation.requestPermissions();
     if ((await Geolocation.checkPermissions()).location === 'granted') {
       return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     }
     return null;
+  };
+
+  const base64ToImage = (dataURI: string) => {
+    const fileDate = dataURI.split(',');
+    const byteString = atob(fileDate[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type: 'image/png' });
   };
 
   return (
@@ -132,10 +247,11 @@ const Write = () => {
           </IonTitle>
         </IonHeader>
         <div>
+          {!!imageSrc && <IonImg src={imageSrc} alt="" className="image" />}
           <IonInput
             id="title"
             ref={() => titleRef}
-            placeholder={dayjs().format('YYYY년 MM월 DD일 ddd요일 HH시 mm분') + ' 지금 나는'}
+            placeholder={now.format('YYYY년 MM월 DD일 ddd요일 HH시 mm분') + ' 지금 나는'}
           ></IonInput>
           <div className="section-divider" />
           <IonTextarea
@@ -148,10 +264,10 @@ const Write = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickCamaraButton}>
           <IonIcon icon={cameraOutline} className="footer-icon" />
         </IonButton>
-        <IonButton fill="clear">
+        <IonButton fill="clear" onClick={onClickGalleryButton}>
           <IonIcon icon={imagesOutline} className="footer-icon" />
         </IonButton>
         <IonButton fill="clear" onClick={onClickTimeButton}>
