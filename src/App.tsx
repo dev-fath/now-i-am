@@ -40,6 +40,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import Map from 'pages/Map';
+import { getStorage, ref as fireStorageRef } from '@firebase/storage';
 
 dayjs.extend(isLeapYear);
 dayjs.locale('ko');
@@ -63,7 +64,10 @@ console.debug(process.env);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+export const fireStorage = getStorage(app);
+fireStorageRef(fireStorage, 'images');
 
+fireStorage.app.automaticDataCollectionEnabled = true;
 analytics.app.automaticDataCollectionEnabled = true;
 
 export const db = getFirestore();

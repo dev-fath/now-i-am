@@ -25,15 +25,18 @@ import dayjs from 'dayjs';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
+import type { Photo } from '@capacitor/camera';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Filesystem } from '@capacitor/filesystem';
 import { collection, doc, setDoc } from 'firebase/firestore/lite';
-import { db } from '../../App';
+import { db, fireStorage } from '../../App';
 import { firebaseCollectionPath, firebaseDocuments } from '../../constant/constants';
+import { ref as fireStorageRef, uploadBytes } from '@firebase/storage';
 
 const Write = () => {
   const history = useHistory();
 
+  // const storageRef = fireStorageRef(fireStorage, imageName); // 파일 읽기
   const dbRef = collection(
     db,
     'user',
@@ -42,6 +45,7 @@ const Write = () => {
 
   const [contents, setContents] = useState('');
   const [imageSrc, setImageSrc] = useState('');
+  const selectedImage = useRef<Photo>({ saved: false, format: 'png', exif: '' });
   const now = useMemo(() => {
     return dayjs();
   }, []);
@@ -77,6 +81,9 @@ const Write = () => {
       alert('이미지 처리중 에러가 발생했습니다. \n 잠시 후 다시 시도해주세요');
       return;
     }
+
+    selectedImage.current = image;
+
     const file = await Filesystem.readFile({
       path: image.path,
     });
@@ -98,6 +105,8 @@ const Write = () => {
     if (!image.path) {
       return;
     }
+
+    selectedImage.current = image;
 
     const file = await Filesystem.readFile({
       path: image.path,
@@ -150,7 +159,22 @@ const Write = () => {
       ? inputTitle.toString()
       : now.format('YYYY년 MM월 DD일 ddd요일 HH시 mm분');
 
+    const a = selectedImage.current.path?.split('/') ?? [];
+    const filename = a[a.length - 1];
+
     const location = (await getLocationInfo())?.coords;
+    console.debug(selectedImage.current);
+    const ref = fireStorageRef(fireStorage, `images/${filename}`);
+    const imageFile = base64ToImage(imageSrc);
+
+    try {
+      // console.log('adsf');
+      const x = await uploadBytes(ref, imageFile);
+
+      console.debug(x);
+    } catch (e: unknown) {
+      console.error(e);
+    }
 
     try {
       await setDoc(doc(dbRef), {
@@ -158,7 +182,7 @@ const Write = () => {
         contents: contents,
         location: JSON.stringify(location),
         date: now.format('YYYY-MM-DD HH:mm:ss'),
-        imageUrl: imageSrc,
+        imageUrl: `images/${filename}`,
       });
       history.replace('../');
     } catch (e: unknown) {
@@ -174,6 +198,17 @@ const Write = () => {
       return await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     }
     return null;
+  };
+
+  const base64ToImage = (dataURI: string) => {
+    const fileDate = dataURI.split(',');
+    const byteString = atob(fileDate[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type: 'image/png' });
   };
 
   return (
