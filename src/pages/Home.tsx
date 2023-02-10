@@ -1,5 +1,5 @@
 import MessageListItem from 'components/MessageListItem';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { FeedInterface, FeedResponseInterface } from 'data/messages';
 import {
   IonContent,
@@ -15,34 +15,36 @@ import {
 import './Home.scss';
 import SnackBarMenu from 'components/snack-bar/SnackBarMenu';
 import { collection, getDocs, query } from 'firebase/firestore/lite';
-import { db } from '../App';
 import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants';
+import { db, fireStorage } from '../App';
+import { getDownloadURL, ref } from '@firebase/storage';
 
-const Home: React.FC = () => {
-  const [dataList, setDataList] = useState<FeedInterface[]>([]);
+const Home = () => {
+  const [dataList, setDataList] = useState<FeedInterface[] | undefined>();
 
   useIonViewWillEnter(async () => {
-    const dbRef = collection(
+    const feedDbRef = collection(
       db,
       'user',
       ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
     );
-
-    const q = query(dbRef);
+    const q = query(feedDbRef);
 
     const snapshot = await getDocs(q);
-    setDataList(
-      snapshot.docs.map((snapShotDocument) => {
-        const feedResponse = snapShotDocument.data() as FeedResponseInterface;
 
-        return {
-          ...feedResponse,
-          id: snapShotDocument.id,
-          location: !!feedResponse.location && JSON.parse(feedResponse.location),
-          imageUrl: feedResponse.imageUrl,
-        };
-      }),
-    );
+    const snapshotDocs = snapshot.docs.map(async (snapShotDocument) => {
+      const feedResponse = snapShotDocument.data() as FeedResponseInterface;
+      const imageUrl = await getDownloadURL(ref(fireStorage, feedResponse.imageUrl));
+
+      return {
+        ...feedResponse,
+        id: snapShotDocument.id,
+        location: !!feedResponse.location && JSON.parse(feedResponse.location),
+        imageUrl: imageUrl,
+      };
+    });
+
+    setDataList(await Promise.all(snapshotDocs));
   });
 
   const refresh = (e: CustomEvent) => {
@@ -69,7 +71,7 @@ const Home: React.FC = () => {
         </IonHeader>
         <SnackBarMenu />
         <IonList>
-          {dataList.map((m, i) => (
+          {dataList?.map((m, i) => (
             <MessageListItem key={i} message={m} />
           ))}
         </IonList>
