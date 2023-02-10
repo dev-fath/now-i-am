@@ -19,38 +19,41 @@ import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants
 import { db, fireStorage } from '../App';
 import { getDownloadURL, ref } from '@firebase/storage';
 
+const getFeedData = async () => {
+  const feedDbRef = collection(
+    db,
+    'user',
+    ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+  );
+  const q = query(feedDbRef);
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map(async (snapShotDocument) => {
+    const feedResponse = snapShotDocument.data() as FeedResponseInterface;
+    const imageUrl = await getDownloadURL(ref(fireStorage, feedResponse.imageUrl));
+
+    return {
+      ...feedResponse,
+      id: snapShotDocument.id,
+      location: !!feedResponse.location && JSON.parse(feedResponse.location),
+      imageUrl: imageUrl,
+    };
+  });
+};
+
 const Home = () => {
   const [dataList, setDataList] = useState<FeedInterface[] | undefined>();
 
   useIonViewWillEnter(async () => {
-    const feedDbRef = collection(
-      db,
-      'user',
-      ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
-    );
-    const q = query(feedDbRef);
-
-    const snapshot = await getDocs(q);
-
-    const snapshotDocs = snapshot.docs.map(async (snapShotDocument) => {
-      const feedResponse = snapShotDocument.data() as FeedResponseInterface;
-      const imageUrl = await getDownloadURL(ref(fireStorage, feedResponse.imageUrl));
-
-      return {
-        ...feedResponse,
-        id: snapShotDocument.id,
-        location: !!feedResponse.location && JSON.parse(feedResponse.location),
-        imageUrl: imageUrl,
-      };
-    });
-
+    const snapshotDocs = await getFeedData();
     setDataList(await Promise.all(snapshotDocs));
   });
 
-  const refresh = (e: CustomEvent) => {
-    setTimeout(() => {
-      e.detail.complete();
-    }, 3000);
+  const refresh = async (e: CustomEvent) => {
+    const snapshotDocs = await getFeedData();
+    setDataList(await Promise.all(snapshotDocs));
+    e.detail.complete();
   };
 
   return (
