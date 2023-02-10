@@ -2,6 +2,9 @@ import { IonItem, IonLabel, IonNote } from '@ionic/react';
 import type { FeedInterface } from 'data/messages';
 import './MessageListItem.scss';
 import dayjs from 'dayjs';
+import { getDownloadURL, ref } from '@firebase/storage';
+import { fireStorage } from '../App';
+import { useState } from 'react';
 
 interface MessageListItemPropsInterface {
   readonly message: FeedInterface;
@@ -12,6 +15,12 @@ const timestampConverter = (datetime: string) => {
 };
 
 const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
+  const [fileUrl, setFileUrl] = useState('');
+
+  getDownloadURL(ref(fireStorage, message.imageUrl)).then((url) => {
+    setFileUrl(url);
+  });
+
   return (
     <IonItem routerLink={`/message/${message.id}`} detail={false}>
       {/*<div slot="start" className="dot dot-unread"></div>*/}
@@ -23,7 +32,7 @@ const MessageListItem = ({ message }: MessageListItemPropsInterface) => {
           </span>
         </div>
         <div className="contents-container">
-          {!!message.imageUrl && <img src={message.imageUrl} alt="" className="image" />}
+          {!!fileUrl && <img src={fileUrl} alt="" className="image" />}
           <div className="column-wrapper">
             <h3>{message.contents}</h3>
             <p className="contents">
