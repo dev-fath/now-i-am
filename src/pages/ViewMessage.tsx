@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { FeedInterface } from 'data/messages';
 import {
   IonBackButton,
@@ -22,36 +22,35 @@ import { firebaseCollectionPath, firebaseDocuments } from '../constant/constants
 import { useHistory } from 'react-router-dom';
 import { getDownloadURL, ref } from '@firebase/storage';
 
-function ViewMessage() {
+const ViewMessage = React.memo(() => {
   const [message, setMessage] = useState<FeedInterface>();
   const params = useParams<{ id: string }>();
-
   const history = useHistory();
 
-  const dbRef = collection(
-    db,
-    'user',
-    ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
-  );
-
-  const [fileUrl, setFileUrl] = useState('');
-
-  if (message?.imageUrl) {
-    getDownloadURL(ref(fireStorage, message?.imageUrl)).then((url) => {
-      setFileUrl(url);
-    });
-  }
-
   useIonViewWillEnter(async () => {
-    // const q = query(dbRef, where('documentId', '==', `feed-${params.id}`));
+    const dbRef = collection(
+      db,
+      'user',
+      ...[firebaseDocuments.userFeeds, firebaseCollectionPath.feeds],
+    );
     const snapshot = await getDoc(doc(dbRef, `${params.id}`));
     if (!snapshot.exists()) {
       alert('일시적인 오류입니다! 잠시 후 다시 시도해주세요.');
       history.goBack();
       return;
     }
-    setMessage((snapshot.data() as FeedInterface) ?? { id: '', title: '', date: '', contents: '' });
-  });
+
+    const feedData = snapshot.data() as FeedInterface;
+    const imageUrl = await getDownloadURL(ref(fireStorage, feedData?.imageUrl));
+    setMessage(
+      { ...feedData, imageUrl: imageUrl } ?? {
+        id: '',
+        title: '',
+        date: '',
+        contents: '',
+      },
+    );
+  }, []);
 
   return (
     <IonPage id="view-message-page">
@@ -66,7 +65,7 @@ function ViewMessage() {
       <IonContent fullscreen>
         {message ? (
           <>
-            {!!fileUrl && <img src={fileUrl} alt="" />}
+            {!!message.imageUrl && <img src={message.imageUrl} alt="" />}
             <IonItem>
               <IonIcon icon={personCircle} color="primary"></IonIcon>
               <IonLabel className="ion-text-wrap">
@@ -100,6 +99,6 @@ function ViewMessage() {
       </IonContent>
     </IonPage>
   );
-}
+});
 
 export default ViewMessage;
