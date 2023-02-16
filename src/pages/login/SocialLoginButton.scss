@@ -1,0 +1,26 @@
+
+ion-button {
+  font-size: 12px;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: darken(#F2D399, 10%);
+  }
+
+  .forgot-password {
+    margin-top: 16px;
+    font-size: 16px;
+    text-align: center;
+
+    a {
+      color: #F2D399;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.2s;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+}

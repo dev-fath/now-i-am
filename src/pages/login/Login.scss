@@ -1,0 +1,120 @@
+@import "../../styles/var";
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+
+  .login-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+
+    .login-input {
+      margin-bottom: 10px;
+      background-color: $nia-dark-shade;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: $nia-light-shade;
+
+      &::placeholder {
+        color: #c4c4c4;
+      }
+    }
+
+    .password-input {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+
+    .password-toggle {
+      text-align: right;
+      color: #c4c4c4;
+      font-size: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .login-button {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  }
+
+  .social-login-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .social-login-button {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+  }
+
+  .signup-link-wrapper {
+    font-size: 14px;
+    color: $nia-dark-shade;
+
+    a {
+      color: #F2D399;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .login-wrapper {
+      padding: 0 10px;
+    }
+
+    .login-form {
+      margin-bottom: 10px;
+
+      .login-input {
+        font-size: 16px;
+        padding: 10px 14px;
+      }
+
+      .password-toggle {
+        font-size: 12px;
+      }
+
+      .login-button {
+        font-size: 16px;
+      }
+    }
+
+    .social-login-buttons {
+      margin-bottom: 10px;
+
+      .social-login-button {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+      }
+    }
+
+    .signup-link-wrapper {
+      font-size: 12px;
+
+      a {
+        font-size: 12px;
+      }
+    }
+  }
+}

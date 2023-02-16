@@ -81,7 +81,8 @@
     "workbox-range-requests": "^5.1.4",
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
-    "workbox-streams": "^5.1.4"
+    "workbox-streams": "^5.1.4",
+    "zxcvbn": "^4.4.2"
   },
   "browserslist": {
     "production": [
@@ -102,6 +103,7 @@
     "@capacitor/cli": "4.6.2",
     "@ionic/eslint-config": "^0.3.0",
     "@ionic/lab": "3.2.15",
+    "@types/zxcvbn": "^4.4.1",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
     "eslint": "^8.33.0",

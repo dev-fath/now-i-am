@@ -41,6 +41,7 @@ import 'dayjs/locale/ko';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import Map from 'pages/Map';
 import { getStorage, ref as fireStorageRef } from '@firebase/storage';
+import Login from 'pages/login/Login';
 
 dayjs.extend(isLeapYear);
 dayjs.locale('ko');
@@ -91,7 +92,10 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet mode="md">
           <Route path="/" exact>
-            <Redirect to="/home" />
+            <Redirect to="/login" />
+          </Route>
+          <Route path="/login" exact>
+            <Login />
           </Route>
           <Route path="/home" exact>
             <Home />
