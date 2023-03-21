@@ -2,13 +2,16 @@
 
 ### 내 위치 기반 일상 기록 앱
 - 하이브리드 웹 앱
-- 
+- 서버리스로 개발하는 것을 목표로 함
+- 기획문서 : https://dev-fath.notion.site/549685079ff94b95988b91558e0fecdf
 
 ## 기술스택
 1. React 
 1. Typescript
 1. ionic
 1. capacitor
+1. GCP firebase store
+1. GCP fire storage
 
 ## 기술 스택 버전
 1. React 18
